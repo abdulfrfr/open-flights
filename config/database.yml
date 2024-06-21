@@ -17,13 +17,22 @@
 default: &default
   adapter: postgresql
   encoding: unicode
+  database: <%= ENV['POSTGRES_NAME'] %>
+  pool: <%= ENV.fetch("DB_POOL") { 5 } %>
+  host: <%= ENV.fetch("POSTGRES_HOST") { "localhost" } %>
+  username: <%= ENV.fetch("POSTGRES_USER") { "postgres" } %>
+  password: <%= ENV.fetch("POSTGRES_PASSWORD") { "" } %>
+  port: <%= ENV['POSTGRES_PORT'] || '5432' %>
+
+
   # For details on connection pooling, see Rails configuration guide
   # http://guides.rubyonrails.org/configuring.html#database-pooling
-  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  timeout: 5000
+
 
 development:
   <<: *default
-  database: open-flights_development
+
 
   # The specified database role being used to connect to postgres.
   # To create additional roles in postgres see `$ createuser --help`.
@@ -57,7 +66,7 @@ development:
 # Do not set this db to the same as development or production.
 test:
   <<: *default
-  database: open-flights_test
+
 
 # As with config/secrets.yml, you never want to store sensitive information,
 # like your database password, in your source code. If your source code is
@@ -80,6 +89,6 @@ test:
 #
 production:
   <<: *default
-  database: open-flights_production
-  username: open-flights
-  password: <%= ENV['OPEN-FLIGHTS_DATABASE_PASSWORD'] %>
+  secret_key_base: <%= ENV["SECRET_KEY_BASE"] %>
+  database: <%= ENV['POSTGRES_NAME'] %>
+
